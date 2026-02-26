@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promo Kuota Nasional</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f5f5;
+    transition:0.2s;
+}
+
+.topbar{
+    background:#d60000;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.card{
+    background:white;
+    margin:20px;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    text-align:center;
+}
+
+input{
+    width:90%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    text-align:center;
+    font-size:16px;
+}
+
+button{
+    width:95%;
+    padding:12px;
+    margin-top:15px;
+    background:#d60000;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.progress{
+    width:100%;
+    background:#eee;
+    border-radius:10px;
+    margin-top:15px;
+    display:none;
+}
+
+.bar{
+    width:0%;
+    height:15px;
+    background:#d60000;
+    border-radius:10px;
+}
+
+#hacker, #shutdown{
+    display:none;
+    background:black;
+    color:lime;
+    font-family:monospace;
+}
+
+#shutdown{
+    color:red;
+}
+
+.fullscreen-message{
+    background:black;
+    color:white;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-size:24px;
+    text-align:center;
+}
+.small{
+    font-size:12px;
+    color:gray;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+🎁 Promo Kuota Nasional 🎁
+</div>
+
+<div class="card" id="step1">
+    <h3>Klaim Kuota 200GB</h3>
+    <input type="text" id="nama" placeholder="Masukkan Nama Kamu">
+    <input type="text" id="nomor" placeholder="08xxxxxxxxxx">
+    <button onclick="kirimNomor()">Lanjut</button>
+    <p class="small">Simulasi hiburan.</p>
+</div>
+
+<div class="card" id="step2" style="display:none;">
+    <h3>Masukkan Kode OTP</h3>
+    <input type="text" id="otp" placeholder="6 Digit OTP">
+    <button onclick="verifikasiOTP()">Verifikasi</button>
+
+    <div class="progress" id="progress">
+        <div class="bar" id="bar"></div>
+    </div>
+</div>
+
+<div class="card" id="hacker">
+    <h2>⚠ SYSTEM BREACH ⚠</h2>
+    <p id="targetNama"></p>
+    <p id="scan"></p>
+</div>
+
+<div class="card" id="shutdown">
+    <h2>⚠ PERANGKAT AKAN DIMATIKAN ⚠</h2>
+    <h1 id="countdown">5</h1>
+</div>
+
+<audio id="notif" src="notif.mp3"></audio>
+<audio id="ketawa" src="ketawa.mp3"></audio>
+
+<script>
+window.onbeforeunload = function () {
+    return "Yakin mau keluar? Proses belum selesai...";
+};
+
+var namaUser = "";
+
+function kirimNomor(){
+    var nama = document.getElementById("nama").value;
+    var nomor = document.getElementById("nomor").value;
+
+    if(nama=="" || nomor.length<10){
+        alert("Isi data dengan benar!");
+        return;
+    }
+
+    namaUser = nama;
+
+    if(document.documentElement.requestFullscreen){
+        document.documentElement.requestFullscreen();
+    }
+
+    document.getElementById("step1").style.display="none";
+    document.getElementById("step2").style.display="block";
+
+    setTimeout(function(){
+        document.getElementById("notif").play();
+        alert("Kode OTP (SIMULASI): 123456");
+    },1000);
+}
+
+function verifikasiOTP(){
+    var otp = document.getElementById("otp").value;
+    if(otp.length<4){
+        alert("OTP salah!");
+        return;
+    }
+
+    document.getElementById("progress").style.display="block";
+    var bar = document.getElementById("bar");
+    var width = 0;
+
+    var interval = setInterval(function(){
+        if(width>=100){
+            clearInterval(interval);
+            document.getElementById("step2").style.display="none";
+            tampilHacker();
+        }else{
+            width++;
+            bar.style.width = width + "%";
+        }
+    },25);
+}
+
+function efekKelapKelip(){
+    var flash = 0;
+    var interval = setInterval(function(){
+        document.body.style.background =
+            (flash%2==0) ? "black" : "white";
+        flash++;
+        if(flash>15){
+            clearInterval(interval);
+            document.body.style.background="black";
+        }
+    },120);
+}
+
+function ketikEfek(element, teks, speed, callback){
+    element.innerHTML="";
+    let i=0;
+    let interval=setInterval(function(){
+        element.innerHTML+=teks.charAt(i);
+        i++;
+        if(i>=teks.length){
+            clearInterval(interval);
+            if(callback) callback();
+        }
+    },speed);
+}
+
+function tampilHacker(){
+    document.getElementById("hacker").style.display="block";
+    efekKelapKelip();
+
+    let target=document.getElementById("targetNama");
+    let scan=document.getElementById("scan");
+
+    ketikEfek(target,"Mengakses Data Milik: "+namaUser,40,function(){
+        setTimeout(function(){
+            ketikEfek(scan,"Mengambil Foto Selfie...",40,function(){
+                setTimeout(function(){
+                    ketikEfek(scan,"Mengirim ke Server Meme...",40,function(){
+                        setTimeout(function(){
+                            ketikEfek(scan,"ERROR 😂",60,function(){
+                                setTimeout(simulasiShutdown,1500);
+                            });
+                        },800);
+                    });
+                },800);
+            });
+        },800);
+    });
+}
+
+function simulasiShutdown(){
+    document.getElementById("hacker").style.display="none";
+    document.getElementById("shutdown").style.display="block";
+
+    let hitung=5;
+    let cd=document.getElementById("countdown");
+    cd.innerText=hitung;
+
+    let interval=setInterval(function(){
+        hitung--;
+        cd.innerText=hitung;
+
+        if(hitung<=0){
+            clearInterval(interval);
+
+            document.body.innerHTML=`
+            <div class="fullscreen-message">
+                😭 SANTAI ${namaUser}! 😭<br><br>
+                INI CUMA PRANK!!!<br><br>
+                🤣🤣🤣
+            </div>
+            `;
+
+            document.getElementById("ketawa").play();
+        }
+    },1000);
+}
+</script>
+
+</body>
+</html>
